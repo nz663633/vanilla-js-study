@@ -69,9 +69,14 @@ const delay = (ms) => {
     });
 };
 
-const start = async () => {
-    let result = await delay(3000);
-    console.log(result);
+const start = async () => { // 비동기 작업을 순서대로 처리할 함수
+    try { // try 안에서 에러 발생하면 catch로 이동
+        let result = await delay(3000); // delay(3000) -> 즉시 Promise 반환, delay 함수의 결과를 기다림
+        console.log(result);
+    }
+    catch(error) {
+        console.log(error);
+    }
 };
 
 start();
