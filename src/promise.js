@@ -13,6 +13,7 @@ promise
     .catch((error) => {
         console.log(error);
     });
+
 // then 메서드: promise가 fulfilled(성공) 되었을 때 실행
 // catch 메서드: promise가 reject(실패) 되었을 때 실행
 
@@ -59,3 +60,23 @@ workA(10)
 콜백함수 안에 다시 콜백함수를 전달하는 방식으로 작성 => 콜백지옥 
 콜백지옥을 해결하기 위해 => then, catch 메소드 사용 */
 
+
+const delay = (ms) => {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve('3초가 지났습니다.')
+        }, ms);
+    });
+};
+
+const start = async () => {
+    let result = await delay(3000);
+    console.log(result);
+};
+
+start();
+
+// async: 항상 Promise 반환
+/* await: Promise 객체가 처리 완료될 때까지의 함수의 실행을 기다리게 함
+await 키워드는 프로미스 객체를 반환하는 어떠한 함수 내부에서만 사용가능
+-> async 키워드 내부에서만 사용가능*/
