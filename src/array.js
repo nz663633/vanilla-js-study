@@ -1,8 +1,12 @@
 let arr = [1,2,3,4,5];
 
-arr.forEach((elm, idx, array) => {
-    console.log(`${idx}번째 요소는 ${elm}입니다.`);
-    console.log(array);
+let newArray = arr.map((elm) => {
+    return elm * 10;
 });
-// forEach: 배열에서 for문을 대체해 사용
-// 배열의 모든 요소 하나씩 순회, 반환값 X
+
+console.log(newArray);
+
+// map(): 배열 안에 모든 원소를 변환할 때 유용
+// 전달한 콜백함수를 호출한 결과를 모아서 새로운 배열로 반환
+// 배열의 모든 요소에 연산을 적용
+// forEach() / map() : 처리할 현재요소, index, array 순서대로 매개변수 전달가능
