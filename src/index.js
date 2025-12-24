@@ -1,6 +1,6 @@
-const compare2 = (a, b) => { // 오름차순
-    return b - a; // 문자열 정렬에서는 사용불가
-}
-let numbers = [1, 100, 25, 50, 120, 3];
-numbers.sort(compare2);
-console.log(numbers);
+let a = Array.isArray([1, 100, 50]);
+let b = Array.isArray({id: 1, color: "green"});
+let c = Array.isArray("string");
+let d = Array.isArray(undefined);
+
+console.log(a, b, c, d);

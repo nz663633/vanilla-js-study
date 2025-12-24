@@ -21,7 +21,6 @@ console.log(colors.indexOf("pink"));
 // indexOf(인덱스번호를 찾고자 하는 요소, index): 찾고자 하는 요소를 index부터 찾기 시작하겠다!
 // 객체나 배열인 경우는 사용할 수 없다. -> 대신 findIndex() 사용
 
-console.log("==============");
 
 let colors2 = [
     { id: 1, color: "red"},
