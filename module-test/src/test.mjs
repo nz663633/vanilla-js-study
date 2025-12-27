@@ -1,11 +1,7 @@
-const num = 35;
-
-function add(num1, num2) {
-    return num1 + num2;
-}
-
 function User(name) {
     this.name = name;
 }
 
-export { num, add, User }
+export default User;
+
+// default 키워드를 사용할 때에는 const, let, var 키워드 사용불가
