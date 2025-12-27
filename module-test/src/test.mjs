@@ -1,9 +1,11 @@
-export const num = 35;
+const num = 35;
 
-export function add(num1, num2) {
+function add(num1, num2) {
     return num1 + num2;
 }
 
-export function User(name) {
+function User(name) {
     this.name = name;
 }
+
+export { num, add, User }
