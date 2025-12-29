@@ -17,28 +17,31 @@ export default function App($app) {
             this.setState({
                 ...this.state,
                 currentTab: name, // 클릭한 탭으로 변경
-                photos: await request(name) // 클릭한 탭에 맞는 사진 데이터 요청
+                photos: await request(name === "all"?'':name) // 클릭한 탭에 맞는 사진 데이터 요청
             });
         } // 탭 클릭 -> 상태 변경
     });
 
-    const content = new Content();
+    const content = new Content({
+        $app,
+        initialState: [],
+    });
 
-    this.setState() = (newState) => {
+    this.setState = (newState) => {
         this.state = newState;
         tabBar.setState(this.state.currentTab); // 변경된 currentTab을 TabBar에 전달
         content.setState(this.state.photos); // 변경된 photos를 Content에 전달
     };
 
     const init = async () => { // 처음 실행될 때 한 번만 실행되는 초기화 함수
-        try{
+        try {
             const initialPhotos = await request(); // 아무 탭도 안눌렀을 때 기본 사진 요청
             this.setState({
                 ...this.state,
                 photos: initialPhotos
             });
             // 초기 사진 데이터를 저장
-        } catch(err) {
+        } catch (err) {
             console.log(err);
         }
     };
