@@ -66,7 +66,7 @@ export default function App($app) {
             this.setState({
                 ...this.state,
                 startIdx: 0,
-                sortBy:'total',
+                sortBy: 'total',
                 region: region,
                 searchWord: '',
                 cities: cities,
@@ -97,6 +97,25 @@ export default function App($app) {
         header.setState({ sortBy: this.state.sortBy, searchWord: this.state.searchWord });
         regionList.setState(this.state.region);
     };
+
+    window.addEventListener('popstate', async () => { // 뒤로가기, 앞으로가기 이벤트가 발생했을 때
+        const urlPath = window.location.pathname;
+
+        const prevRegion = urlPath.replace('/', '');
+        const prevSortBy = getSortBy();
+        const prevSearchWord = getSearchWord();
+        const prevStartIdx = 0;
+        const prevCities = await request(prevStartIdx, prevRegion, prevSortBy, prevSearchWord);
+
+        this.setState({
+            ...this.state,
+            startIdx: prevStartIdx,
+            sortBy: prevSortBy,
+            region: prevRegion,
+            searchWord: prevSearchWord,
+            cities: prevCities
+        });
+    });
 
     const init = async () => {
         const cities = await request(this.state.startIdx, this.state.region, this.state.sortBy, this.state.searchWord);
