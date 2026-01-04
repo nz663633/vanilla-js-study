@@ -1,3 +1,4 @@
+// 전역 상태관리, 각 컴포넌트 연결
 // components
 import Header from "./components/Header.js";
 import RegionList from "./components/RegionList.js";
@@ -21,6 +22,7 @@ export default function App($app) {
         return '';
     }
 
+    // 전역 상태
     this.state = {
         startIdx: 0,
         sortBy: getSortBy(),
@@ -29,28 +31,30 @@ export default function App($app) {
         cities: '',
     };
 
+    // Header
     const header = new Header({
         $app,
         initialState: { sortBy: this.state.sortBy, searchWord: this.state.searchWord },
-        handleSortChange: async (sortBy) => {
+        handleSortChange: async (sortBy) => { // 정렬 기준 변경 시 실행
             const pageUrl = `/${this.state.region}?sort=${sortBy}`;
-            history.pushState(
+            history.pushState( // URL 상태 변경
                 null,
                 null,
                 this.state.searchWord ? pageUrl + `$search=${this.state.searchWord}` : pageUrl
             );
+            // 정렬 기준에 맞게 도시 데이터 재요청
             const cities = await request(0, this.state.region, sortBy, this.state.searchWord);
-            this.setState({
+            this.setState({ // 변경된 상태 갱신
                 ...this.state,
                 startIdx: 0,
                 sortBy: sortBy,
                 cities: cities
             });
         },
-        handleSearch: async (searchWord) => {
+        handleSearch: async (searchWord) => { // 검색어 입력 후 Enter 시 실행
             history.pushState(null, null, `/${this.state.region}?sort=${this.state.sortBy}&search=${searchWord}`);
             const cities = await request(0, this.state.region, this.state.sortBy, searchWord);
-            this.setState({
+            this.setState({ // 변경된 상태 갱신
                 ...this.state,
                 startIdx: 0,
                 searchWord: searchWord,
@@ -60,7 +64,7 @@ export default function App($app) {
     });
     const regionList = new RegionList({
         $app, initialState: this.state.region,
-        handleRegion: async (region) => {
+        handleRegion: async (region) => { // 원하는 지역 클릭 시 실행
             history.pushState(null, null, `/${region}?sort=total`);
             const cities = await request(0, region, 'total');
             this.setState({
@@ -76,7 +80,7 @@ export default function App($app) {
 
     const cityList = new CityList({
         $app, initialState: this.state.cities,
-        handleLoadMore: async () => { // '더보기'라는 버튼을 눌렀을 때 실행되는 함수
+        handleLoadMore: async () => { // '더보기' 클릭 시 실행
             const newStartIdx = this.state.startIdx + 40;
             const newCities = await request(newStartIdx, this.state.region, this.state.sortBy, this.state.searchWord);
             this.setState({
@@ -98,7 +102,7 @@ export default function App($app) {
         regionList.setState(this.state.region);
     };
 
-    window.addEventListener('popstate', async () => { // 뒤로가기, 앞으로가기 이벤트가 발생했을 때
+    window.addEventListener('popstate', async () => { // 뒤로 / 앞으로 가기 이벤트가 발생했을 때
         const urlPath = window.location.pathname;
 
         const prevRegion = urlPath.replace('/', '');
@@ -117,7 +121,7 @@ export default function App($app) {
         });
     });
 
-    const init = async () => {
+    const init = async () => { // 초기 데이터 로딩
         const cities = await request(this.state.startIdx, this.state.region, this.state.sortBy, this.state.searchWord);
         this.setState({
             ...this.state, // 현재 존재하는 state의 값 유지

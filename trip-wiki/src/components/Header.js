@@ -7,7 +7,7 @@ export default function Header({$app, initialState, handleSortChange, handleSear
     this.handleSearch = handleSearch;
     $app.appendChild(this.$target);
 
-    this.template = () => {
+    this.template = () => { // 헤더 템플릿 생성
         const {sortBy, searchWord} = this.state;
         let temp = 
         `<div class="title">
@@ -34,15 +34,16 @@ export default function Header({$app, initialState, handleSortChange, handleSear
 
     this.render = () => {
         this.$target.innerHTML = this.template();
+        // 정렬 변경 이벤트
         document.getElementById('sortList').addEventListener('change', (event) => {
             this.handleSortChange(event.target.value);
-        })
-        const $searchInput = document.getElementById('search');
+        });
+        const $searchInput = document.getElementById('search'); // 검색 Enter 이벤트
         $searchInput.addEventListener('keydown', (event) => {
             if(event.key === "Enter") {
                 this.handleSearch(event.target.value);
             }
-        })
+        });
     };
 
     this.setState = (newState) => { // 새로운 상태 업데이트

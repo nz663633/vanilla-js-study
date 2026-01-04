@@ -6,7 +6,7 @@ export default function CityList({$app, initialState, handleLoadMore}) {
 
     $app.appendChild(this.$target);
 
-    this.template = () => {
+    this.template = () => { // 도시 목록 템플릿 생성
         let temp = `<div class="city-items-container">`
         if (this.state) {
             this.state.cities.forEach((elm) => {
@@ -22,6 +22,7 @@ export default function CityList({$app, initialState, handleLoadMore}) {
         return temp;
     };
 
+    // 렌더링 + 더보기 버튼 처리
     this.render = () => {
         this.$target.innerHTML = this.template();
 
@@ -37,7 +38,7 @@ export default function CityList({$app, initialState, handleLoadMore}) {
         }
     };
 
-    this.setState = (newState) => {
+    this.setState = (newState) => { // 새로운 상태 업데이트
         this.state = newState;
         this.render();
     };

@@ -6,7 +6,7 @@ export default function RegionList({$app, initialState, handleRegion}) {
     this.handleRegion = handleRegion;
     $app.appendChild(this.$target);
 
-    this.template = () => {
+    this.template = () => { // 지역 목록 템플릿 생성
         const regionList = [
             '🚀 All',
             '🌏 Asia',
@@ -29,13 +29,14 @@ export default function RegionList({$app, initialState, handleRegion}) {
     this.render = () => {
         this.$target.innerHTML = this.template();
         let $currentRegion;
-        if(this.state) {
+        if(this.state) { // 현재 선택된 지역 표시
             let $currentRegion = document.getElementById(this.state);
             $currentRegion && ($currentRegion.className = 'clicked');
         } else {
             document.getElementById('All').className = 'clicked';
         }
 
+        // 지역 클릭 시 이벤트 등록
         const $regionList = this.$target.querySelectorAll('div');
         $regionList.forEach((elm) => {
             elm.addEventListener('click', () => {
@@ -44,7 +45,7 @@ export default function RegionList({$app, initialState, handleRegion}) {
         });
     };
 
-    this.setState = (newState) => {
+    this.setState = (newState) => { // 새로운 상태 업데이트
         this.state = newState;
         this.render();
     };
