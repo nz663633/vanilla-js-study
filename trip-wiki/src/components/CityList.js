@@ -14,7 +14,7 @@ export default function CityList({$app, initialState, handleLoadMore}) {
                 <div class="city-item" id=${elm.id}>
                     <img src=${elm.image}></img>
                     <div class="city-item-info">${elm.city}, ${elm.country}></div>
-                    <div class="city-item-score">★ ${elm.total}</div>
+                    <div class="city-item-score">⭐️ ${elm.total}</div>
                 </div>`;
             });
             temp += `</div>`;

@@ -9,13 +9,13 @@ import { request } from "./components/api.js";
 
 export default function App($app) {
     const getSortBy = () => {
-        if (window.location.search){
+        if (window.location.search) {
             return window.location.search.split('sort=')[1].split('&')[0];
         }
         return 'total';
     };
     const getSearchWord = () => {
-        if (window.location.search && window.location.search.includes('search=')){
+        if (window.location.search && window.location.search.includes('search=')) {
             return window.location.search.split('search=')[1];
         }
         return '';
@@ -58,7 +58,22 @@ export default function App($app) {
             })
         }
     });
-    const regionList = new RegionList();
+    const regionList = new RegionList({
+        $app, initialState: this.state.region,
+        handleRegion: async (region) => {
+            history.pushState(null, null, `/${region}?sort=total`);
+            const cities = await request(0, region, 'total');
+            this.setState({
+                ...this.state,
+                startIdx: 0,
+                sortBy:'total',
+                region: region,
+                searchWord: '',
+                cities: cities,
+            });
+        }
+    });
+
     const cityList = new CityList({
         $app, initialState: this.state.cities,
         handleLoadMore: async () => { // '더보기'라는 버튼을 눌렀을 때 실행되는 함수
@@ -80,7 +95,8 @@ export default function App($app) {
         this.state = newState;
         cityList.setState(this.state.cities);
         header.setState({ sortBy: this.state.sortBy, searchWord: this.state.searchWord });
-    }
+        regionList.setState(this.state.region);
+    };
 
     const init = async () => {
         const cities = await request(this.state.startIdx, this.state.region, this.state.sortBy, this.state.searchWord);
