@@ -99,6 +99,13 @@ export default function App($app) {
                         isEnd: newCities.isEnd
                     }
                 })
+            },
+            handleItemClick: (id) => { // 특정 도시(아이템)를 클릭했을 때 실행
+                history.pushState(null, null, `/city/${id}`);
+                this.setState({
+                    ...this.state,
+                    currentPage: `/city/${id}`
+                })
             }
         });
     }
@@ -124,7 +131,6 @@ export default function App($app) {
             renderCityList();
         }
     }
-
 
     window.addEventListener('popstate', async () => { // 뒤로 / 앞으로 가기 이벤트가 발생했을 때
         const urlPath = window.location.pathname;

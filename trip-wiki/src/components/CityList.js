@@ -1,8 +1,10 @@
-export default function CityList({$app, initialState, handleLoadMore}) {
+export default function CityList({ $app, initialState, handleLoadMore, handleItemClick }) {
     this.state = initialState;
     this.$target = document.createElement('div');
     this.$target.className = 'city-list';
-    this.handleLoadMore = handleLoadMore
+
+    this.handleLoadMore = handleLoadMore;
+    this.handleItemClick = handleItemClick;
 
     $app.appendChild(this.$target);
 
@@ -10,7 +12,7 @@ export default function CityList({$app, initialState, handleLoadMore}) {
         let temp = `<div class="city-items-container">`
         if (this.state) {
             this.state.cities.forEach((elm) => {
-                temp +=  `
+                temp += `
                 <div class="city-item" id=${elm.id}>
                     <img src=${elm.image}></img>
                     <div class="city-item-info">${elm.city}, ${elm.country}></div>
@@ -22,9 +24,13 @@ export default function CityList({$app, initialState, handleLoadMore}) {
         return temp;
     };
 
-    // 렌더링 + 더보기 버튼 처리
     this.render = () => {
         this.$target.innerHTML = this.template();
+        this.$target.querySelectorAll(`div.city-item`).forEach((elm) => {
+            elm.addEventListener('click', () => {
+                this.handleItemClick(elm.id);
+            });
+        });
 
         if (!this.state.isEnd) { // 더 불러올 데이터가 존재한다면?
             const $loadMoreButton = document.createElement('button');
