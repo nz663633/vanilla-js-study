@@ -6,7 +6,7 @@ import CityList from "./components/CityList.js";
 import CityDetail from "./components/CityDetail.js";
 
 // API
-import { request } from "./components/api.js";
+import { request, requestCityDetail } from "./components/api.js";
 
 export default function App($app) {
     const getSortBy = () => {
@@ -36,7 +36,11 @@ export default function App($app) {
     const renderHeader = () => {
         new Header({
             $app,
-            initialState: { sortBy: this.state.sortBy, searchWord: this.state.searchWord },
+            initialState: {
+                currentPage: this.state.currentPage,
+                sortBy: this.state.sortBy,
+                searchWord: this.state.searchWord
+            },
             handleSortChange: async (sortBy) => { // 정렬 기준 변경 시 실행
                 const pageUrl = `/${this.state.region}?sort=${sortBy}`;
                 history.pushState( // URL 상태 변경
@@ -80,6 +84,7 @@ export default function App($app) {
                     region: region,
                     searchWord: '',
                     cities: cities,
+                    currentPage: `/${region}`
                 });
             }
         });
@@ -98,20 +103,25 @@ export default function App($app) {
                         cities: [...this.state.cities.cities, ...newCities.cities],
                         isEnd: newCities.isEnd
                     }
-                })
+                });
             },
             handleItemClick: (id) => { // 특정 도시(아이템)를 클릭했을 때 실행
                 history.pushState(null, null, `/city/${id}`);
                 this.setState({
                     ...this.state,
                     currentPage: `/city/${id}`
-                })
+                });
             }
         });
     }
 
-    const renderCityDetail = () => {
-        new CityDetail();
+    const renderCityDetail = async (cityId) => {
+        try {
+            const cityDetailData = await requestCityDetail(cityId); // 해당 도시에 맞는 API 호출
+            new CityDetail({ $app, initialState: cityDetailData });
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     this.setState = (newState) => { // 새로운 상태 업데이트
@@ -123,8 +133,9 @@ export default function App($app) {
         const path = this.state.currentPage;
         $app.innerHTML = '';
         if (path.startsWith('/city/')) { // 웹페이지의 URL이 상세페이지를 가리킬 경우
+            const cityId = path.split('/city/')[1];
             renderHeader();
-            renderCityDetail();
+            renderCityDetail(cityId);
         } else {
             renderHeader();
             renderRegionList();
@@ -136,6 +147,7 @@ export default function App($app) {
         const urlPath = window.location.pathname;
 
         const prevRegion = urlPath.replace('/', '');
+        const prevPage = urlPath;
         const prevSortBy = getSortBy();
         const prevSearchWord = getSearchWord();
         const prevStartIdx = 0;

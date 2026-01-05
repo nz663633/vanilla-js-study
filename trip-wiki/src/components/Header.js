@@ -1,4 +1,4 @@
-export default function Header({$app, initialState, handleSortChange, handleSearch}) {
+export default function Header({ $app, initialState, handleSortChange, handleSearch }) {
     this.state = initialState;
     this.$target = document.createElement('div');
     this.$target.className = 'header';
@@ -8,12 +8,14 @@ export default function Header({$app, initialState, handleSortChange, handleSear
     $app.appendChild(this.$target);
 
     this.template = () => { // 헤더 템플릿 생성
-        const {sortBy, searchWord} = this.state;
-        let temp = 
-        `<div class="title">
+        const { sortBy, searchWord, currentPage } = this.state;
+        let temp =
+            `<div class="title">
             <a href="http://127.0.0.1:5500/trip-wiki/index.html">Trip Wiki</a>
-        </div>
-        <div class="filter-search-container">
+        </div>`;
+
+        if (!currentPage.includes('/city/')) {
+            temp += `<div class="filter-search-container">
             <div class="filter">
                 <select id="sortList" class="sort-list">
                     <option value="total" ${sortBy === 'total' ? 'selected' : ''}>Total</option>;
@@ -28,22 +30,24 @@ export default function Header({$app, initialState, handleSortChange, handleSear
             <div class="search"></div>
                 <input type="text" placeholder="Search" id="search" autocomplete="off" value="${searchWord}"></input>
         </div>`;
-
+        }
         return temp;
     };
 
     this.render = () => {
         this.$target.innerHTML = this.template();
-        // 정렬 변경 이벤트
-        document.getElementById('sortList').addEventListener('change', (event) => {
-            this.handleSortChange(event.target.value);
-        });
-        const $searchInput = document.getElementById('search'); // 검색 Enter 이벤트
-        $searchInput.addEventListener('keydown', (event) => {
-            if(event.key === "Enter") {
-                this.handleSearch(event.target.value);
-            }
-        });
+        if (!this.state.currentPage.includes('/city/')) {
+            // 정렬 변경 이벤트
+            document.getElementById('sortList').addEventListener('change', (event) => {
+                this.handleSortChange(event.target.value);
+            });
+            const $searchInput = document.getElementById('search'); // 검색 Enter 이벤트
+            $searchInput.addEventListener('keydown', (event) => {
+                if (event.key === "Enter") {
+                    this.handleSearch(event.target.value);
+                }
+            });
+        }
     };
 
     this.setState = (newState) => { // 새로운 상태 업데이트
